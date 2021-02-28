@@ -47,7 +47,7 @@ services:
     working_dir: /application
 
     volumes:
-    - ./app:/application
+    - ./app:/application:cached
 #    - ./config/php-fpm/php-fpm.ini:/etc/php8/conf.d/99-overrides.ini
     environment:
       XDEBUG_CONFIG: "remote_host=host.docker.internal remote_enable=1"
