@@ -1,11 +1,4 @@
 version: "3.4"
-networks:
-  internal:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: ${SUBNET_IP}.0/24
 
 services:
   db:
@@ -20,9 +13,6 @@ services:
 #    - ./logs/pg/:/var/log/pg
     ports:
     - 5433:5432
-    networks:
-      internal:
-        ipv4_address: ${SUBNET_IP}.6
 
   webserver:
     build: config/nginx
@@ -37,9 +27,6 @@ services:
       - php-fpm
     ports:
     - "${NGINX_EXTERNAL_PORT}:80"
-    networks:
-      internal:
-        ipv4_address: ${SUBNET_IP}.3
 
   php-fpm:
     build: config/php-fpm
@@ -48,21 +35,16 @@ services:
 
     volumes:
     - ./app:/application:cached
-#    - ./config/php-fpm/php-fpm.ini:/etc/php8/conf.d/99-overrides.ini
+    - ./config/php-fpm/php.ini:/usr/local/etc/php/conf.d/php.ini
+    - ./config/php-fpm/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     environment:
       XDEBUG_CONFIG: "remote_host=host.docker.internal remote_enable=1"
-      PHP_IDE_CONFIG: "serverName=Docker"
+      PHP_IDE_CONFIG: "serverName=${COMPOSE_PROJECT_NAME}-docker"
     depends_on:
       - redis
-    networks:
-      internal:
-        ipv4_address: ${SUBNET_IP}.4
 
   redis:
     image: "redis:alpine"
     container_name: ${COMPOSE_PROJECT_NAME}_redis
     ports:
       - "${REDIS_EXTERNAL_PORT}:6379"
-    networks:
-      internal:
-        ipv4_address: ${SUBNET_IP}.5

@@ -47,6 +47,7 @@ RUN docker-php-ext-install -j$(nproc) iconv && \
     docker-php-ext-configure pdo_pgsql --with-pdo-pgsql && \
     docker-php-ext-install pgsql pdo pdo_pgsql intl opcache soap && \
     pecl install xdebug && \
+    docker-php-ext-enable xdebug && \
     docker-php-ext-enable opcache xdebug && \
     docker-php-ext-configure imap --with-kerberos --with-imap-ssl && \
     docker-php-ext-install -j$(nproc) imap
@@ -57,7 +58,11 @@ RUN curl -sS https://getcomposer.org/installer | tee composer-setup.php \
 #    \
 #    && ln -s /usr/bin/php8 /usr/local/bin/php
 
-COPY php.ini /usr/local/etc/php/conf.d/
+ADD php.ini /usr/local/etc/php/conf.d/php.ini
+ADD xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+RUN echo 'alias sf="php bin/console"' >> ~/.bashrc
+RUN echo 'alias sf3="php bin/console"' >> ~/.bashrc
 
 WORKDIR /application
 
