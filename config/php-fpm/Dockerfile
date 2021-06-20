@@ -36,7 +36,8 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     g++ \
     libc-client-dev \
-    libkrb5-dev
+    libkrb5-dev \
+    graphviz
 #    rm -r /var/lib/apt/lists/*
 
 # install dependecies
