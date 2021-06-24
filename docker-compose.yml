@@ -13,6 +13,8 @@ services:
 #    - ./logs/pg/:/var/log/pg
     ports:
     - 5433:5432
+    networks:
+      - internal
 
   webserver:
     build: config/nginx
@@ -54,6 +56,8 @@ services:
     container_name: ${COMPOSE_PROJECT_NAME}_redis
     ports:
       - "${REDIS_EXTERNAL_PORT}:6379"
+    networks:
+      - internal
 
 networks:
   internal:
